@@ -30,14 +30,32 @@ public class HealthSysytem : MonoBehaviour
 
         if(health > maxHealth)
             health = maxHealth;
-        else if (health < 0)
+        else if (health <= 0)
         {
             health = 0;
             isDie = true;
+            StartCoroutine(RecoveryHP());
         }
 
         UpdateHealth();
     }
+
+    IEnumerator RecoveryHP()
+    {
+        WaitForSeconds delay = new WaitForSeconds(0.3f);
+        while(isDie)
+        {
+            yield return delay;
+            
+            ChangeHealth(maxHealth / 10);
+            UpdateHealth();
+
+            isDie = !(health == maxHealth);
+        }
+
+        yield return null;
+    }
+
 
     void UpdateHealth()
     {
