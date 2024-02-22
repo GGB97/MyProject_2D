@@ -25,12 +25,15 @@ public class Player : MonoBehaviour
 
     public Vector2 vel;
 
+    public MeleeAttack meleeAttack;
+
     private void Awake()
     {
         AnimationData.Initialize();
         Rigidbody = GetComponent<Rigidbody2D>();
         Animator = GetComponentInChildren<Animator>();
         Input = GetComponent<PlayerInput>();
+        meleeAttack = GetComponentInChildren<MeleeAttack>();
 
         stateMachine = new PlayerStateMachine(this);
     }
@@ -45,28 +48,25 @@ public class Player : MonoBehaviour
         stateMachine.HandleInput();
         stateMachine.Update();
 
-        vel = Rigidbody.velocity;
-
-        //Debug.Log(stateMachine.GetCurState() == stateMachine.FallState);
+        //vel = Rigidbody.velocity;   // 여기 두줄은 삭제 예정
+        //Debug.Log(stateMachine.MovementInput);
 
         if (!isGrounded)
         {
-
             isGrounded = IsGrounded(); // 레이쏴서 isGrounded 검사
 
             if (isGrounded && stateMachine.GetCurState() == stateMachine.FallState)
-            {
                 stateMachine.ChangeState(stateMachine.IdleState);
-            }
         }
 
+        //Debug.Log(stateMachine.ComboIndex);
     }
 
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();
 
-        Rigidbody.velocity += Physics2D.gravity * Time.fixedDeltaTime; // 중력 가속도
+        Rigidbody.velocity += Physics2D.gravity * Time.fixedDeltaTime; // 중력
     }
 
     private bool IsGrounded()
@@ -98,21 +98,17 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // 기즈모 색상 설정
         Gizmos.color = Color.green;
 
 
         for (int i = 0; i < rayCnt; i++)
         {
-            // 레이캐스트 시작점
             float sizeY = GetComponent<CapsuleCollider2D>().size.y / 2;
             Vector3 spacing = new Vector3(i * raySpacing - .4f, -sizeY, 0);
             Vector2 startPos = transform.position + spacing;
 
-            // 레이캐스트 종료점
             Vector2 endPos = startPos + Vector2.down * raydistance;
 
-            // 기즈모로 레이캐스트를 그립니다.
             Gizmos.DrawLine(startPos, endPos);
         }
     }

@@ -8,7 +8,9 @@ public class PlayerIdleState : PlayerGroundState
 
     public override void Enter()
     {
-        stateMachine.MovementSpeedModifier = 0f; // idle 상태에선 이동이 없어야 해서
+        // idle 상태에선 이동이 없어야 해서 (근데 이걸 적용하면 idle 상태에서 점프시 이동이 안됨)
+        // 여기선 공중에서도 좌우 이동을 할 수 있게 하고 싶어서 제거
+        //stateMachine.MovementSpeedModifier = 0f; 
         base.Enter();
 
         StartAnimation(animData.IdleParameterHash);

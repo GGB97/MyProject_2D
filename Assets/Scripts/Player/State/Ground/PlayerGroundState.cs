@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerGroundState : PlayerBaseState
 {
@@ -13,6 +14,17 @@ public class PlayerGroundState : PlayerBaseState
         base.Enter();
 
         StartAnimation(animData.GroundParameterHash);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (stateMachine.IsAttacking)
+        {
+            OnAttack();
+            return;
+        }
     }
 
     public override void PhysicsUpdate()
@@ -52,5 +64,10 @@ public class PlayerGroundState : PlayerBaseState
     {
         base.OnJumpStarted(context);
         stateMachine.ChangeState(stateMachine.JumpState);
+    }
+
+    protected virtual void OnAttack()
+    {
+        stateMachine.ChangeState(stateMachine.ComboAttackState);
     }
 }

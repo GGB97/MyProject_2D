@@ -17,3 +17,21 @@ MonoBehaviour:
     <MoveSpeedModifier>k__BackingField: 1
   <AirData>k__BackingField:
     <JumpForce>k__BackingField: 10
+  <AttackData>k__BackingField:
+    <AttackInfoDatas>k__BackingField:
+    - <AttackName>k__BackingField: "1\uD0C0"
+      <ComboStateIndex>k__BackingField: 1
+      <ComboTransitionTime>k__BackingField: 0.2
+      <ForceTransitionTime>k__BackingField: 0
+      <Force>k__BackingField: 0
+      <Damage>k__BackingField: 10
+      <Delay>k__BackingField: 0.1
+      <AttackRange>k__BackingField: {x: 1.5, y: 2}
+    - <AttackName>k__BackingField: "2\uD0C0"
+      <ComboStateIndex>k__BackingField: -1
+      <ComboTransitionTime>k__BackingField: 0
+      <ForceTransitionTime>k__BackingField: 0
+      <Force>k__BackingField: 0
+      <Damage>k__BackingField: 15
+      <Delay>k__BackingField: 0.1
+      <AttackRange>k__BackingField: {x: 1.5, y: 2}

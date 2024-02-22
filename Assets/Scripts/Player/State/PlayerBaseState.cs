@@ -10,11 +10,13 @@ public class PlayerBaseState : IState
 
     protected PlayerInput input;
     protected PlayerAnimationData animData;
+    protected Rigidbody2D rigidbody;
     public PlayerBaseState(PlayerStateMachine playerStateMachine)
     {
         stateMachine = playerStateMachine;
         input = stateMachine.Player.Input;
         animData = stateMachine.Player.AnimationData;
+        rigidbody = stateMachine.Player.Rigidbody;
     }
     public virtual void Enter()
     {
@@ -48,6 +50,10 @@ public class PlayerBaseState : IState
         input.PlayerActions.Movement.started += OnMoveStarted;
 
         input.PlayerActions.Jump.started += OnJumpStarted;
+
+        input.PlayerActions.Attack.performed += OnAttackPerformed;
+        input.PlayerActions.Attack.canceled += OnAttackCanceled;
+
     }
     protected virtual void RemoveInputActionsCallbacks()
     {
@@ -56,6 +62,9 @@ public class PlayerBaseState : IState
         input.PlayerActions.Movement.started -= OnMoveStarted;
 
         input.PlayerActions.Jump.started -= OnJumpStarted;
+
+        input.PlayerActions.Attack.performed -= OnAttackPerformed;
+        input.PlayerActions.Attack.canceled -= OnAttackCanceled;
     }
 
 
@@ -66,7 +75,7 @@ public class PlayerBaseState : IState
 
     private Vector2 GetMovementDirection()
     {
-        return stateMachine.MovementInput; // 이러면 되나?
+        return stateMachine.MovementInput;
     }
 
     private float GetMovementSpeed()
@@ -106,6 +115,15 @@ public class PlayerBaseState : IState
 
     protected virtual void OnJumpStarted(InputAction.CallbackContext context) { }
 
+    protected virtual void OnAttackPerformed(InputAction.CallbackContext obj)
+    {
+        stateMachine.IsAttacking = true;
+    }
+    protected virtual void OnAttackCanceled(InputAction.CallbackContext obj)
+    {
+        stateMachine.IsAttacking = false;
+    }
+
     protected void StartAnimation(int animationHash)
     {
         stateMachine.Player.Animator.SetBool(animationHash, true);
@@ -114,5 +132,24 @@ public class PlayerBaseState : IState
     protected void StopAnimation(int animationHash)
     {
         stateMachine.Player.Animator.SetBool(animationHash, false);
+    }
+
+    protected float GetNormalizedTime(Animator animator, string tag)
+    {
+        AnimatorStateInfo currentInfo = animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo nextInfo = animator.GetNextAnimatorStateInfo(0);
+
+        if (animator.IsInTransition(0) && nextInfo.IsTag(tag))
+        {
+            return nextInfo.normalizedTime;
+        }
+        else if (!animator.IsInTransition(0) && currentInfo.IsTag(tag))
+        {
+            return currentInfo.normalizedTime;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 }
