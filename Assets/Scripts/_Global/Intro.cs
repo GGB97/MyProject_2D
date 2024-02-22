@@ -2,13 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : SingletoneBase<GameManager>
+public class Intro : MonoBehaviour
 {
-    public int healthID;
-
     private void Awake()
     {
-        healthID = 0;
+        UIManager.Instance.ShowUI<UIStart>();
     }
-
 }

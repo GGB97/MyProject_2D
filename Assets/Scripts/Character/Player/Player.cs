@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -17,13 +18,10 @@ public class Player : MonoBehaviour
     PlayerStateMachine stateMachine;
 
     [SerializeField] LayerMask groundMask;
-    //[SerializeField] Transform rayPos;
     int rayCnt = 3;
     float raydistance = 0.2f;
     float raySpacing = 0.4f;
     public bool isGrounded;
-
-    public Vector2 vel;
 
     public MeleeAttack meleeAttack;
 
@@ -36,20 +34,21 @@ public class Player : MonoBehaviour
         meleeAttack = GetComponentInChildren<MeleeAttack>();
 
         stateMachine = new PlayerStateMachine(this);
+
+        GameManager.Instance.player = this;
     }
 
     private void Start()
     {
         stateMachine.ChangeState(stateMachine.IdleState);
+
+        Input.PlayerActions.Menu.started += OnMenuInput;
     }
 
     private void Update()
     {
         stateMachine.HandleInput();
         stateMachine.Update();
-
-        //vel = Rigidbody.velocity;   // 여기 두줄은 삭제 예정
-        //Debug.Log(stateMachine.MovementInput);
 
         if (!isGrounded)
         {
@@ -58,8 +57,6 @@ public class Player : MonoBehaviour
             if (isGrounded && stateMachine.GetCurState() == stateMachine.FallState)
                 stateMachine.ChangeState(stateMachine.IdleState);
         }
-
-        //Debug.Log(stateMachine.ComboIndex);
     }
 
     private void FixedUpdate()
@@ -111,5 +108,10 @@ public class Player : MonoBehaviour
 
             Gizmos.DrawLine(startPos, endPos);
         }
+    }
+
+    void OnMenuInput(InputAction.CallbackContext context)
+    {
+        UIManager.Instance.ShowUI<UIMenu>();
     }
 }
