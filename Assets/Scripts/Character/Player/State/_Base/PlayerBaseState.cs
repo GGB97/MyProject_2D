@@ -101,7 +101,7 @@ public class PlayerBaseState : IState
 
     private void LookRotation(Vector2 movementDirection)
     {
-        Quaternion rot = stateMachine.Player.transform.rotation; // 캐릭터가 바라보는 방향 수정 flipX는 콜라이더는 반전이 안되어서 부모 오브젝트의 rot 값을 건드림
+        Quaternion rot = stateMachine.Player.transform.rotation; // 캐릭터가 바라보는 방향 수정 flipX는 콜라이더는 반전이 안되던걸로 기억나서 부모 오브젝트의 rot 값을 건드림
         if (movementDirection.x > 0)
             rot.y = 0;
         else if (movementDirection.x < 0)
